@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kira ♡ Dreamy Candy Portfolio</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;900&family=Zen+Maru+Gothic:wght@400;700;900&family=Caveat:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --soft-pink: #ffeef2;
+            --whip-white: #ffffff;
+            --shadow-light: #ffffff;
+            --shadow-dark: #f0ced6;
+            --accent-candy: #ff8fa3;
+            --text-main: #7a6368;
+        }
+
+        body {
+            font-family: 'Zen Maru Gothic', 'M PLUS Rounded 1c', sans-serif;
+            background-color: var(--soft-pink);
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        .font-handwriting { font-family: 'Caveat', cursive; }
+
+        /* 綿あめのような雲の背景 */
+        .cloud-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: linear-gradient(135deg, #fff5f7 0%, #fff0f3 100%);
+        }
+
+        .cloud {
+            position: absolute;
+            background: radial-gradient(circle, #ffffff 0%, rgba(255,255,255,0) 70%);
+            border-radius: 50%;
+            filter: blur(50px);
+            opacity: 0.6;
+            animation: cloud-float 20s infinite alternate ease-in-out;
+        }
+
+        @keyframes cloud-float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(100px, 50px) scale(1.2); }
+        }
+
+        /* Neumorphism: ぷっくり浮き出る */
+        .neu-flat {
+            background: var(--soft-pink);
+            box-shadow: 10px 10px 20px var(--shadow-dark),
+                        -10px -10px 20px var(--shadow-light);
+            border-radius: 2rem;
+        }
+
+        .neu-pressed {
+            background: var(--soft-pink);
+            box-shadow: inset 8px 8px 16px var(--shadow-dark),
+                        inset -8px -8px 16px var(--shadow-light);
+            border-radius: 2rem;
+        }
+
+        /* ぷっくりボタン */
+        .neu-button {
+            background: var(--soft-pink);
+            box-shadow: 6px 6px 12px var(--shadow-dark),
+                        -6px -6px 12px var(--shadow-light);
+            border-radius: 1.5rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid transparent;
+            cursor: pointer;
+        }
+        .neu-button:hover {
+            box-shadow: 3px 3px 6px var(--shadow-dark),
+                        -3px -3px 6px var(--shadow-light);
+            transform: scale(0.98);
+            border-color: var(--whip-white);
+        }
+        .neu-button:active {
+            box-shadow: inset 4px 4px 8px var(--shadow-dark),
+                        inset -4px -4px 8px var(--shadow-light);
+        }
+
+        /* イラストカード */
+        .artwork-card {
+            padding: 12px;
+            background: var(--soft-pink);
+            box-shadow: 15px 15px 30px var(--shadow-dark),
+                        -15px -15px 30px var(--shadow-light);
+            border-radius: 2.5rem;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+        }
+        .artwork-card:hover {
+            transform: translateY(-10px);
+        }
+
+        /* スクロール出現 */
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 1s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ライトボックス */
+        #lightbox {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(255, 238, 242, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            cursor: zoom-out;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* カスタムスクロールバー */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--soft-pink);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--shadow-dark);
+            border-radius: 10px;
+            border: 3px solid var(--soft-pink);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- 背景装飾 -->
+    <div class="cloud-bg">
+        <div class="cloud" style="width: 500px; height: 500px; top: -10%; left: -10%;"></div>
+        <div class="cloud" style="width: 400px; height: 400px; bottom: 10%; right: -5%; animation-delay: -5s;"></div>
+        <div class="cloud" style="width: 300px; height: 300px; top: 40%; left: 30%; animation-delay: -10s;"></div>
+    </div>
+
+    <main class="max-w-4xl mx-auto px-6 py-12">
+        
+        <!-- Hero -->
+        <section class="text-center mb-24 reveal">
+            <div class="relative inline-block mb-10">
+                <div class="w-40 h-40 md:w-52 md:h-52 rounded-full neu-flat p-3 mx-auto">
+                    <!-- プロフィール画像 -->
+                    <div class="w-full h-full rounded-full overflow-hidden border-4 border-white shadow-inner">
+                        <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=400" alt="Kira" class="w-full h-full object-cover">
+                    </div>
+                </div>
+                <div class="absolute -bottom-2 -right-2 bg-white w-12 h-12 rounded-full flex items-center justify-center text-2xl shadow-lg animate-bounce">🎀</div>
+            </div>
+            
+            <h1 class="text-4xl md:text-5xl font-black mb-4 flex flex-col md:flex-row items-center justify-center gap-3">
+                <span class="font-handwriting text-pink-300 text-3xl">Hello, I'm</span>
+                <span class="tracking-tighter">きら</span>
+            </h1>
+            <p class="text-lg md:text-xl font-bold opacity-70 mb-8">
+                甘くて優しい、キャンディのような世界を。
+            </p>
+            
+            <div class="flex justify-center gap-4">
+                <a href="#gallery" class="neu-button px-8 py-3 font-bold text-sm">Gallery</a>
+                <a href="#contact" class="neu-button px-8 py-3 font-bold text-sm bg-white border-pink-100">Contact</a>
+            </div>
+        </section>
+
+        <!-- Gallery -->
+        <section id="gallery" class="mb-32">
+            <div class="flex items-center gap-4 mb-12 reveal">
+                <div class="w-12 h-12 neu-flat flex items-center justify-center text-xl">🍭</div>
+                <h2 class="text-2xl font-black italic">Sweet Portfolio</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <!-- Artwork 1 -->
+                <div class="artwork-card reveal" onclick="openLightbox(this.querySelector('img').src)">
+                    <div class="rounded-[1.8rem] overflow-hidden aspect-square mb-4 shadow-inner bg-white/50">
+                        <img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&q=80&w=600" class="w-full h-full object-cover" alt="Artwork 01">
+                    </div>
+                    <div class="px-4 pb-2 flex justify-between items-center">
+                        <span class="font-bold">Cotton Candy Day</span>
+                        <span class="font-handwriting text-pink-300 text-xl">#01</span>
+                    </div>
+                </div>
+                <!-- Artwork 2 -->
+                <div class="artwork-card reveal" onclick="openLightbox(this.querySelector('img').src)">
+                    <div class="rounded-[1.8rem] overflow-hidden aspect-square mb-4 shadow-inner bg-white/50">
+                        <img src="https://images.unsplash.com/photo-1525909002-1b05e0c869d8?auto=format&fit=crop&q=80&w=600" class="w-full h-full object-cover" alt="Artwork 02">
+                    </div>
+                    <div class="px-4 pb-2 flex justify-between items-center">
+                        <span class="font-bold">Strawberry Dream</span>
+                        <span class="font-handwriting text-pink-300 text-xl">#02</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About (Pressed UI) -->
+        <section class="neu-pressed p-10 mb-32 reveal">
+            <div class="max-w-2xl mx-auto">
+                <div class="font-handwriting text-4xl text-pink-300 mb-4">My Story...</div>
+                <h3 class="text-2xl font-black mb-6 tracking-tight">ホイップクリームのように<br>ふんわり、でも芯のあるデザインを。</h3>
+                <p class="leading-loose opacity-80 font-bold text-sm md:text-base">
+                    幼い頃に見た絵本のワクワクを忘れないために、イラストを描いています。<br>
+                    「大人っぽいけど、遊び心は忘れない」そんな絶妙なニュアンスを、
+                    Neumorphismの質感とパステルカラーで表現するのが得意です。
+                </p>
+            </div>
+        </section>
+
+        <!-- SNS Links -->
+        <section id="contact" class="mb-32 text-center">
+            <div class="inline-block neu-flat px-10 py-4 mb-12 reveal">
+                <h2 class="font-black italic">Connect With Kira</h2>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 reveal">
+                <a href="#" class="neu-button aspect-square flex-col gap-2">
+                    <span class="text-2xl">📸</span>
+                    <span class="text-[10px] font-black uppercase tracking-widest">Insta</span>
+                </a>
+                <a href="#" class="neu-button aspect-square flex-col gap-2">
+                    <span class="text-2xl">🧵</span>
+                    <span class="text-[10px] font-black uppercase tracking-widest">Threads</span>
+                </a>
+                <a href="#" class="neu-button aspect-square flex-col gap-2">
+                    <span class="text-2xl">📝</span>
+                    <span class="text-[10px] font-black uppercase tracking-widest">Note</span>
+                </a>
+                <a href="#" class="neu-button aspect-square flex-col gap-2">
+                    <span class="text-2xl">💌</span>
+                    <span class="text-[10px] font-black uppercase tracking-widest">Email</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- Shop CTA -->
+        <section class="reveal">
+            <a href="#" class="block neu-flat p-1 relative overflow-hidden group">
+                <div class="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity"></div>
+                <div class="p-8 md:p-12 text-center border-4 border-dashed border-white rounded-[1.8rem]">
+                    <span class="font-handwriting text-3xl text-pink-300 block mb-2">Special Offer</span>
+                    <h3 class="text-2xl md:text-3xl font-black mb-6">オーダーメイドのイラスト制作 ♡</h3>
+                    <div class="neu-button px-12 py-4 bg-white text-pink-400 font-bold">
+                        販売サイトをチェックする
+                    </div>
+                </div>
+            </a>
+        </section>
+
+    </main>
+
+    <footer class="py-12 text-center opacity-40">
+        <p class="text-[10px] font-black tracking-[0.4em] uppercase">
+            &copy; <span id="year"></span> KIRA DREAMY CANDY.
+        </p>
+    </footer>
+
+    <!-- Lightbox -->
+    <div id="lightbox" onclick="this.style.display='none'">
+        <div class="neu-flat p-4 max-w-[90vw] relative">
+            <img id="lightbox-img" src="" class="rounded-2xl max-h-[80vh] shadow-inner" alt="Enlarged view">
+            <div class="absolute top-6 right-6 w-8 h-8 flex items-center justify-center bg-white/50 rounded-full font-bold">×</div>
+        </div>
+    </div>
+
+    <script>
+        // コピーライトの年を自動更新
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // スクロールアニメーションの制御
+        const reveal = () => {
+            const reveals = document.querySelectorAll('.reveal');
+            reveals.forEach(el => {
+                const windowHeight = window.innerHeight;
+                const elementTop = el.getBoundingClientRect().top;
+                const elementVisible = 100;
+                if (elementTop < windowHeight - elementVisible) {
+                    el.classList.add('active');
+                }
+            });
+        };
+
+        window.addEventListener('scroll', reveal);
+        window.addEventListener('load', reveal);
+
+        // ライトボックス表示
+        function openLightbox(src) {
+            const lb = document.getElementById('lightbox');
+            const img = document.getElementById('lightbox-img');
+            img.src = src;
+            lb.style.display = 'flex';
+        }
+
+        // スムーズスクロール
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                document.querySelector(targetId).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
