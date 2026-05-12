@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;900&family=Zen+Maru+Gothic:wght@400;700;900&family=Caveat:wght@700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --soft-pink: #ffeef2;
+            --soft-pink: #ffdae5;
             --whip-white: #ffffff;
             --shadow-light: #ffffff;
             --shadow-dark: #f0ced6;
@@ -40,24 +40,12 @@
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: -2;
             background: 
-                radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.8) 0%, transparent 40%),
-                radial-gradient(circle at 90% 10%, rgba(186, 230, 253, 0.4) 0%, transparent 40%),
-                radial-gradient(circle at 80% 80%, rgba(255, 192, 203, 0.4) 0%, transparent 50%);
+                linear-gradient(135deg, #ffc9d8 0%, #e0f7fa 50%, #ffb6c1 100%);
             animation: aurora-bg 15s ease infinite alternate;
         }
-        @keyframes aurora-bg { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(20deg); } }
+        @keyframes aurora-bg { 0% { filter: hue-rotate(0deg) saturate(1.2); } 100% { filter: hue-rotate(15deg) saturate(1.5); } }
         
-        .bg-dots {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1;
-            background-image: radial-gradient(rgba(255, 255, 255, 0.5) 1.5px, transparent 1.5px);
-            background-size: 30px 30px;
-            opacity: 0.5;
-            pointer-events: none;
-        }
-
-        /* ふわふわ浮遊アニメーション - translateYの蓄積を防ぐため、基準値を固定 */
+        /* ふわふわ浮遊アニメーション */
         @keyframes floatingAction {
             0% { transform: translate(-50%, -50%) translateY(0px); }
             50% { transform: translate(-50%, -50%) translateY(-20px); }
@@ -74,7 +62,7 @@
         .profile-container {
             position: relative;
             width: 100%;
-            height: 220px; /* アイコンが動いてもはみ出さない高さを確保 */
+            height: 220px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -88,8 +76,7 @@
             position: absolute;
             top: 50%;
             left: 50%;
-            /* translateはアニメーション内で行う */
-            width: 176px; /* 44 * 4 */
+            width: 176px;
             height: 176px;
             animation: floatingAction 4s ease-in-out infinite;
             will-change: transform;
@@ -115,7 +102,7 @@
 
         /* ニューモーフィズム */
         .neu-flat {
-            background: rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.6);
             box-shadow: 10px 10px 20px var(--shadow-dark), -10px -10px 20px var(--shadow-light);
             border: 1px solid rgba(255, 255, 255, 0.7);
             backdrop-filter: blur(10px);
@@ -123,7 +110,7 @@
         }
 
         .neu-button {
-            background: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.7);
             box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
             border-radius: 2rem;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.4);
@@ -142,6 +129,7 @@
         }
 
         /* ギャラリーインタラクション */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
         .artwork-card {
             scroll-snap-align: center;
             flex-shrink: 0;
@@ -152,7 +140,6 @@
             transition: transform 0.4s ease;
         }
         .artwork-inner {
-            /* ギャラリー画像も個別にふわふわさせる */
             animation: floatingActionSimple 5s ease-in-out infinite;
             will-change: transform;
             transition: all 0.4s ease;
@@ -171,12 +158,6 @@
             animation-play-state: paused;
             background: white;
             box-shadow: 15px 15px 30px var(--shadow-dark);
-        }
-        .artwork-card img {
-            transition: transform 0.6s ease;
-        }
-        .artwork-card:hover img {
-            transform: scale(1.08);
         }
 
         .reveal { opacity: 0; transform: translateY(20px); transition: 0.8s ease-out; }
@@ -227,12 +208,40 @@
             justify-content: center;
             padding: 1rem;
         }
+
+        /* フローティングアイテム（シャボン玉・ハート）の共通スタイル */
+        .floating-item {
+            cursor: pointer;
+            z-index: 1000;
+            will-change: transform, opacity;
+            transition: transform 0.1s ease-out;
+        }
+        .floating-item:active {
+            transform: scale(0.8);
+        }
+
+        .bubble {
+            box-shadow: inset -5px -5px 15px rgba(255, 255, 255, 0.5), inset 5px 5px 15px rgba(186, 230, 253, 0.5);
+            border: 2px solid rgba(255, 255, 255, 0.8) !important;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.6), rgba(186, 230, 253, 0.4));
+        }
+
+        .heart-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.8));
+        }
+        .heart-item svg {
+            width: 100%;
+            height: 100%;
+        }
     </style>
 </head>
 <body>
 
     <div class="bg-pattern"></div>
-    <div class="bg-dots"></div>
     <div id="bubble-container"></div>
 
     <main class="max-w-4xl mx-auto px-6 py-12 relative z-10">
@@ -241,7 +250,6 @@
         <section class="text-center mb-16 reveal">
             <div class="profile-container">
                 <div class="floating-shadow"></div>
-                <!-- 浮遊するボックス自体を中央からアニメーションさせる -->
                 <div class="floating-icon-box">
                     <div class="w-full h-full rounded-full neu-flat p-2.5 relative">
                         <div class="w-full h-full rounded-full overflow-hidden border-4 border-white bg-white">
@@ -278,12 +286,12 @@
             <div class="text-center mb-4">
                 <span class="section-label">GALLERY</span>
             </div>
-            <div class="flex overflow-x-auto gap-5 pb-10 px-4 snap-x no-scrollbar" style="scrollbar-width: none; -ms-overflow-style: none;">
-                <!-- 4枚の画像 -->
+            <div class="flex overflow-x-auto gap-5 pb-10 px-4 snap-x no-scrollbar">
+                <!-- Artwork Cards -->
                 <div class="artwork-card" onclick="openLightbox('https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&q=80&w=600')">
                     <div class="artwork-inner p-4 neu-flat rounded-[2.8rem]">
                         <div class="relative overflow-hidden rounded-[2rem] aspect-square mb-4 bg-white">
-                            <img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&q=80&w=600" class="w-full h-full object-cover" alt="Art">
+                            <img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&q=80&w=600" class="w-full h-full object-cover" alt="Art 1">
                         </div>
                         <div class="px-2 flex justify-between items-center">
                             <span class="font-black text-[10px] opacity-60 uppercase">Dreamy</span>
@@ -294,7 +302,7 @@
                 <div class="artwork-card" onclick="openLightbox('https://images.unsplash.com/photo-1525909002-1b05e0c869d8?auto=format&fit=crop&q=80&w=600')">
                     <div class="artwork-inner p-4 neu-flat rounded-[2.8rem]">
                         <div class="relative overflow-hidden rounded-[2rem] aspect-square mb-4 bg-white">
-                            <img src="https://images.unsplash.com/photo-1525909002-1b05e0c869d8?auto=format&fit=crop&q=80&w=600" class="w-full h-full object-cover" alt="Art">
+                            <img src="https://images.unsplash.com/photo-1525909002-1b05e0c869d8?auto=format&fit=crop&q=80&w=600" class="w-full h-full object-cover" alt="Art 2">
                         </div>
                         <div class="px-2 flex justify-between items-center">
                             <span class="font-black text-[10px] opacity-60 uppercase">Sweet</span>
@@ -305,7 +313,7 @@
                 <div class="artwork-card" onclick="openLightbox('https://images.unsplash.com/photo-1558470598-a5dda9640f68?auto=format&fit=crop&q=80&w=600')">
                     <div class="artwork-inner p-4 neu-flat rounded-[2.8rem]">
                         <div class="relative overflow-hidden rounded-[2rem] aspect-square mb-4 bg-white">
-                            <img src="https://images.unsplash.com/photo-1558470598-a5dda9640f68?auto=format&fit=crop&q=80&w=600" class="w-full h-full object-cover" alt="Art">
+                            <img src="https://images.unsplash.com/photo-1558470598-a5dda9640f68?auto=format&fit=crop&q=80&w=600" class="w-full h-full object-cover" alt="Art 3">
                         </div>
                         <div class="px-2 flex justify-between items-center">
                             <span class="font-black text-[10px] opacity-60 uppercase">Pastel</span>
@@ -316,7 +324,7 @@
                 <div class="artwork-card" onclick="openLightbox('https://images.unsplash.com/photo-1515405299443-673bbec58f4a?auto=format&fit=crop&q=80&w=600')">
                     <div class="artwork-inner p-4 neu-flat rounded-[2.8rem]">
                         <div class="relative overflow-hidden rounded-[2rem] aspect-square mb-4 bg-white">
-                            <img src="https://images.unsplash.com/photo-1515405299443-673bbec58f4a?auto=format&fit=crop&q=80&w=600" class="w-full h-full object-cover" alt="Art">
+                            <img src="https://images.unsplash.com/photo-1515405299443-673bbec58f4a?auto=format&fit=crop&q=80&w=600" class="w-full h-full object-cover" alt="Art 4">
                         </div>
                         <div class="px-2 flex justify-between items-center">
                             <span class="font-black text-[10px] opacity-60 uppercase">Sky</span>
@@ -332,17 +340,15 @@
             <div class="text-center mb-4">
                 <span class="section-label">ABOUT ME</span>
             </div>
-            <div class="about-frame">
-                <div class="about-inner text-center relative overflow-hidden bg-white/20">
-                    <div class="max-w-xl mx-auto relative z-10">
-                        <div class="font-handwriting text-6xl text-pink-300 mb-6">My World</div>
-                        <h3 class="text-2xl md:text-3xl font-black mb-8 leading-relaxed text-pink-400">甘さの中に、<br>少しの大人っぽさを。</h3>
-                        <div class="w-16 h-1.5 bg-gradient-to-r from-cyan-100 via-pink-300 to-cyan-100 mx-auto mb-10 rounded-full"></div>
-                        <div class="text-[14px] md:text-[16px] leading-[2.2] opacity-80 font-bold text-left md:text-center px-2 space-y-6">
-                            <p>女の子を中心に、ファッションや空気感を大切にしたイラストを制作しています。</p>
-                            <p>男の子やカップルイラストも描きながら、可愛いだけでは終わらない世界観を目指しています。</p>
-                            <p>AIならではの質感やカラーを活かして、やわらかく印象に残る表現を日々模索中です。</p>
-                        </div>
+            <div class="neu-flat p-8 md:p-12 rounded-[3.5rem] bg-white/20">
+                <div class="text-center relative">
+                    <div class="font-handwriting text-3xl md:text-4xl text-pink-300 mb-6">My World</div>
+                    <h3 class="text-2xl md:text-3xl font-black mb-8 leading-relaxed">甘さの中に、<br>少しの大人っぽさを。</h3>
+                    <div class="w-16 h-1.5 bg-gradient-to-r from-cyan-100 via-pink-300 to-cyan-100 mx-auto mb-10 rounded-full"></div>
+                    <div class="text-[14px] md:text-[16px] leading-[2.2] opacity-80 font-bold text-left md:text-center px-2 space-y-6">
+                        <p>女の子を中心に、ファッションや空気感を大切にしたイラストを制作しています。</p>
+                        <p>男の子やカップルイラストも描きながら、可愛いだけでは終わらない世界観を目指しています。</p>
+                        <p>AIならではの質感やカラーを活かして、やわらかく印象に残る表現を日々模索中です。</p>
                     </div>
                 </div>
             </div>
@@ -356,8 +362,8 @@
             <a href="https://kira00art.base.shop" target="_blank" class="block neu-flat p-2 rounded-[3.5rem] artwork-inner">
                 <div class="p-10 md:p-16 text-center border-4 border-dashed border-white/60 rounded-[3.3rem] bg-white/10 relative">
                     <span class="font-handwriting text-4xl text-pink-300 block mb-4">For You</span>
-                    <h3 class="text-2xl md:text-3xl font-black mb-10 leading-relaxed">オーダーメイド制作、<br>1点ものアイコンはこちら⸜🌷︎⸝‍</h3>
-                    <div class="neu-button px-14 py-5 bg-white text-pink-400 font-black text-lg border border-pink-100 shadow-xl">ショップを見に行く🫧</div>
+                    <h3 class="text-2xl md:text-3xl font-black mb-10 leading-relaxed">オーダーメイド制作、<br>1点ものアイコンは<br>こちら⸜🌷︎⸝‍</h3>
+                    <div class="neu-button px-6 py-5 bg-white text-pink-400 font-black text-lg border border-pink-100 shadow-xl whitespace-nowrap">ショップを見に行く🫧</div>
                 </div>
             </a>
         </section>
@@ -366,15 +372,15 @@
         <section id="contact" class="mb-20 text-center reveal">
             <div class="inline-block neu-flat px-10 py-3 mb-14 rounded-full font-black text-[10px] tracking-[0.2em] bg-white/80 border border-white">FOLLOW ME ✨</div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-2xl mx-auto px-4">
-                <a href="https://www.instagram.com/kira_00kira" target="_blank" class="neu-button p-8 flex flex-col items-center gap-4 group">
+                <a href="https://www.instagram.com/kira00kira" target="_blank" class="neu-button p-8 flex flex-col items-center gap-4">
                     <span class="text-4xl">📸</span>
                     <span class="font-black text-[10px] tracking-widest uppercase">Instagram</span>
                 </a>
-                <a href="https://www.threads.com/@kira_00kira" target="_blank" class="neu-button p-8 flex flex-col items-center gap-4 group">
+                <a href="https://www.threads.com/@kira00kira" target="_blank" class="neu-button p-8 flex flex-col items-center gap-4">
                     <span class="text-4xl">🍭</span>
                     <span class="font-black text-[10px] tracking-widest uppercase">Threads</span>
                 </a>
-                <a href="https://note.com/kirakira_000/n/na9fe93d9103b" target="_blank" class="neu-button p-8 flex flex-col items-center gap-4 group">
+                <a href="https://note.com/kirakira_000/n/na9fe93d9103b" target="_blank" class="neu-button p-8 flex flex-col items-center gap-4">
                     <span class="text-4xl">🎀</span>
                     <span class="font-black text-[10px] tracking-widest uppercase">Portfolio</span>
                 </a>
@@ -387,7 +393,7 @@
 
     <div id="lightbox" onclick="this.style.display='none'">
         <div class="neu-flat p-2 max-w-full md:max-w-[500px]">
-            <img id="lightbox-img" src="" class="rounded-[2.5rem] w-full">
+            <img id="lightbox-img" src="" class="rounded-[2.5rem] w-full" alt="Lightbox Content">
         </div>
     </div>
 
@@ -395,12 +401,16 @@
         // ハートトレイル
         const trails = [];
         const trailCount = 8;
-        for (let i = 0; i < trailCount; i++) {
-            const t = document.createElement('div');
-            t.className = 'trail-heart';
-            document.body.appendChild(t);
-            trails.push({ el: t, x: 0, y: 0 });
-        }
+        window.addEventListener('DOMContentLoaded', () => {
+            for (let i = 0; i < trailCount; i++) {
+                const t = document.createElement('div');
+                t.className = 'trail-heart';
+                document.body.appendChild(t);
+                trails.push({ el: t, x: 0, y: 0 });
+            }
+            animateTrails();
+            initBubbles();
+        });
 
         let mouseX = 0, mouseY = 0;
         document.addEventListener('mousemove', (e) => {
@@ -422,51 +432,76 @@
             });
             requestAnimationFrame(animateTrails);
         }
-        animateTrails();
 
-        // シャボン玉
+        // シャボン玉とハート
         function initBubbles() {
             const container = document.getElementById('bubble-container');
             setInterval(() => {
-                const b = document.createElement('div');
-                const size = Math.random() * 60 + 20 + 'px';
-                b.className = 'bubble';
-                b.style.position = 'fixed';
-                b.style.bottom = '-100px';
-                b.style.borderRadius = '50%';
-                b.style.background = 'rgba(255, 255, 255, 0.3)';
-                b.style.border = '1px solid rgba(255, 255, 255, 0.5)';
-                b.style.width = b.style.height = size;
-                b.style.left = Math.random() * 100 + 'vw';
-                b.style.zIndex = '-1';
-                b.style.pointerEvents = 'none';
-                container.appendChild(b);
-                b.animate([
-                    { transform: 'translateY(0) translateX(0)', opacity: 0.5 },
-                    { transform: `translateY(-110vh) translateX(${Math.random() * 100 - 50}px)`, opacity: 0 }
-                ], { duration: Math.random() * 10000 + 10000, easing: 'linear' });
-                setTimeout(() => b.remove(), 20000);
-            }, 4000);
+                const isHeart = Math.random() > 0.7; // 30%の確率でハート
+                const item = document.createElement('div');
+                item.className = 'floating-item ' + (isHeart ? 'heart-item' : 'bubble');
+                
+                const sizeValue = Math.random() * 50 + 40; 
+                item.style.position = 'fixed';
+                item.style.bottom = '-100px';
+                item.style.width = item.style.height = sizeValue + 'px';
+                item.style.left = Math.random() * 90 + 5 + 'vw';
+                
+                if (isHeart) {
+                    item.innerHTML = `<svg viewBox="0 0 24 24" fill="rgba(255, 143, 163, 0.5)"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`;
+                }
+
+                const handlePop = (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const rect = item.getBoundingClientRect();
+                    popBubble(item, rect.left + rect.width / 2, rect.top + rect.height / 2, isHeart);
+                };
+
+                item.addEventListener('pointerdown', handlePop);
+
+                container.appendChild(item);
+                const anim = item.animate([
+                    { transform: `translateY(0) translateX(0) rotate(${isHeart ? Math.random() * 360 : 0}deg)`, opacity: 0.8 },
+                    { transform: `translateY(-110vh) translateX(${Math.random() * 100 - 50}px) rotate(${isHeart ? Math.random() * 720 : 0}deg)`, opacity: 0 }
+                ], { duration: Math.random() * 8000 + 7000, easing: 'linear' });
+                
+                anim.onfinish = () => item.remove();
+            }, 2000);
+        }
+
+        function popBubble(el, x, y, isHeart) {
+            // 割れた時のキラキラ (ハートの場合はピンク寄りに)
+            for(let i=0; i<15; i++) {
+                const color = isHeart ? '#ff8fa3' : '#fff5a3';
+                createSparkle(x, y, true, color);
+            }
+            el.remove();
         }
 
         // キラキラ
-        function createSparkle(x, y, isBurst = false) {
+        function createSparkle(x, y, isBurst = false, color = '#fff5a3') {
             const s = document.createElement('div');
             s.className = 'sparkle-mouse';
             s.style.left = x + 'px'; s.style.top = y + 'px';
+            s.style.backgroundColor = color;
             document.body.appendChild(s);
             const angle = Math.random() * Math.PI * 2;
-            const dist = isBurst ? Math.random() * 100 + 40 : Math.random() * 40 + 10;
-            const duration = isBurst ? 1200 : 800;
+            const dist = isBurst ? Math.random() * 150 + 50 : Math.random() * 40 + 10;
+            const duration = isBurst ? 1000 : 800;
+            const scale = isBurst ? Math.random() * 1.5 + 0.5 : 1;
+            
             s.animate([
-                { transform: 'translate(0, 0) scale(1)', opacity: 1 },
-                { transform: `translate(${Math.cos(angle)*dist}px, ${Math.sin(angle)*dist}px) scale(0)`, opacity: 0 }
+                { transform: `translate(0, 0) scale(${scale})`, opacity: 1 },
+                { transform: `translate(${Math.cos(angle)*dist}px, ${Math.sin(angle)*dist}px) rotate(${Math.random()*360}deg) scale(0)`, opacity: 0 }
             ], { duration: duration, easing: 'ease-out' });
             setTimeout(() => s.remove(), duration);
         }
 
-        document.addEventListener('mousedown', (e) => {
-            for(let i=0; i<10; i++) createSparkle(e.pageX, e.pageY, true);
+        document.addEventListener('pointerdown', (e) => {
+            if (!e.target.closest('.floating-item')) {
+                for(let i=0; i<6; i++) createSparkle(e.clientX, e.clientY, true);
+            }
         });
 
         // スクロールアニメ
@@ -479,8 +514,6 @@
             document.getElementById('lightbox-img').src = src;
             document.getElementById('lightbox').style.display = 'flex';
         }
-
-        window.onload = () => initBubbles();
     </script>
 </body>
 </html>
