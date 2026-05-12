@@ -1,9 +1,9 @@
-```ht<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kira ♡ Ultra Dreamy Portfolio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Kira ♡ Perfect Floating Portfolio</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;900&family=Zen+Maru+Gothic:wght@400;700;900&family=Caveat:wght@700&display=swap" rel="stylesheet">
     <style>
@@ -14,8 +14,12 @@
             --shadow-dark: #f0ced6;
             --accent-candy: #ff8fa3;
             --text-main: #7a6368;
-            --glitter-gold: #fff5a3;
-            --bubble-blue: rgba(186, 230, 253, 0.6);
+        }
+
+        * {
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+            box-sizing: border-box;
         }
 
         body {
@@ -23,12 +27,14 @@
             background-color: var(--soft-pink);
             color: var(--text-main);
             overflow-x: hidden;
-            line-height: 1.6;
+            line-height: 1.7;
+            margin: 0;
+            padding: 0;
         }
 
         .font-handwriting { font-family: 'Caveat', cursive; }
 
-        /* 背景デザイン */
+        /* 背景 */
         .bg-pattern {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -36,10 +42,10 @@
             background: 
                 radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.8) 0%, transparent 40%),
                 radial-gradient(circle at 90% 10%, rgba(186, 230, 253, 0.4) 0%, transparent 40%),
-                radial-gradient(circle at 80% 80%, rgba(255, 192, 203, 0.4) 0%, transparent 50%),
-                radial-gradient(circle at 20% 90%, rgba(186, 230, 253, 0.3) 0%, transparent 40%);
-            background-color: var(--soft-pink);
+                radial-gradient(circle at 80% 80%, rgba(255, 192, 203, 0.4) 0%, transparent 50%);
+            animation: aurora-bg 15s ease infinite alternate;
         }
+        @keyframes aurora-bg { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(20deg); } }
         
         .bg-dots {
             position: fixed;
@@ -51,130 +57,175 @@
             pointer-events: none;
         }
 
-        .prism-layer {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1;
-            background: linear-gradient(135deg, rgba(255,182,193,0.1) 0%, rgba(135,206,250,0.1) 50%, rgba(221,160,221,0.1) 100%);
-            mix-blend-mode: overlay;
-            pointer-events: none;
+        /* ふわふわ浮遊アニメーション - translateYの蓄積を防ぐため、基準値を固定 */
+        @keyframes floatingAction {
+            0% { transform: translate(-50%, -50%) translateY(0px); }
+            50% { transform: translate(-50%, -50%) translateY(-20px); }
+            100% { transform: translate(-50%, -50%) translateY(0px); }
         }
 
-        /* 泡アニメーション */
-        .bubble {
-            position: absolute;
-            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.95) 0%, var(--bubble-blue) 60%, rgba(244, 114, 182, 0.3) 100%);
-            border: 1.5px solid rgba(255,255,255,0.8);
-            border-radius: 50%;
-            pointer-events: none;
-            box-shadow: 0 4px 15px rgba(186, 230, 253, 0.3), inset 0 0 10px rgba(255,255,255,0.5);
-            animation: rise 15s infinite linear;
+        @keyframes shadowAction {
+            0% { transform: translateX(-50%) scale(1); opacity: 0.15; }
+            50% { transform: translateX(-50%) scale(0.8); opacity: 0.05; }
+            100% { transform: translateX(-50%) scale(1); opacity: 0.15; }
         }
 
-        @keyframes rise {
-            0% { transform: translateY(110vh) translateX(0) scale(0.6); opacity: 0; }
-            10% { opacity: 0.8; }
-            90% { opacity: 0.8; }
-            100% { transform: translateY(-20vh) translateX(30px) scale(1.2); opacity: 0; }
-        }
-
-        /* ニューモーフィズム共通 */
-        .neu-flat {
-            background: var(--soft-pink);
-            box-shadow: 10px 10px 20px var(--shadow-dark), -10px -10px 20px var(--shadow-light);
-            border: 1px solid rgba(255, 255, 255, 0.6);
+        /* アイコンエリアの絶対的な固定 */
+        .profile-container {
             position: relative;
+            width: 100%;
+            height: 220px; /* アイコンが動いてもはみ出さない高さを確保 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        @media (min-width: 768px) {
+            .profile-container { height: 320px; }
         }
 
-        /* アイコンネオン */
-        .neon-border::before {
-            content: '';
+        .floating-icon-box {
             position: absolute;
-            inset: -2px;
-            border-radius: inherit;
-            background: linear-gradient(45deg, #ffd1dc, #b3e5fc, #ffd1dc);
-            z-index: -1;
-            opacity: 0.4;
-            filter: blur(8px);
-            animation: neon-pulse 3s infinite alternate;
+            top: 50%;
+            left: 50%;
+            /* translateはアニメーション内で行う */
+            width: 176px; /* 44 * 4 */
+            height: 176px;
+            animation: floatingAction 4s ease-in-out infinite;
+            will-change: transform;
+            z-index: 10;
         }
-        @keyframes neon-pulse {
-            from { opacity: 0.2; }
-            to { opacity: 0.6; }
+        @media (min-width: 768px) {
+            .floating-icon-box { width: 256px; height: 256px; }
+        }
+
+        .floating-shadow {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            width: 120px;
+            height: 12px;
+            background: var(--text-main);
+            border-radius: 50%;
+            filter: blur(10px);
+            z-index: 5;
+            animation: shadowAction 4s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        /* ニューモーフィズム */
+        .neu-flat {
+            background: rgba(255, 255, 255, 0.5);
+            box-shadow: 10px 10px 20px var(--shadow-dark), -10px -10px 20px var(--shadow-light);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
 
         .neu-button {
-            background: var(--soft-pink);
-            box-shadow: 6px 6px 12px var(--shadow-dark), -6px -6px 12px var(--shadow-light);
+            background: rgba(255, 255, 255, 0.6);
+            box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
             border-radius: 2rem;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 2px solid transparent;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.4);
+            border: 1px solid rgba(255,255,255,0.5);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: inherit;
         }
-        .neu-button:hover {
-            transform: scale(1.05) translateY(-3px);
+        .neu-button:hover, .neu-button:active {
+            transform: scale(1.05) translateY(-2px);
             background: white;
-            border-color: rgba(255,255,255,0.8);
             color: var(--accent-candy);
         }
 
-        /* My Worldセクションの枠線デザイン */
-        .about-frame {
-            background: var(--soft-pink);
-            border-radius: 4rem;
-            padding: 8px;
-            box-shadow: 15px 15px 30px var(--shadow-dark), -15px -15px 30px var(--shadow-light);
-            border: 1px solid rgba(255, 255, 255, 0.7);
-        }
-        .about-inner {
-            border: 4px dashed rgba(255, 255, 255, 0.9);
-            border-radius: 3.5rem;
-            padding: 3rem 1.5rem;
-            background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, transparent 100%);
-        }
-
-        /* ギャラリーカード */
+        /* ギャラリーインタラクション */
         .artwork-card {
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            scroll-snap-align: center;
+            flex-shrink: 0;
+            width: 75vw;
+            max-width: 260px;
+            margin-right: 20px;
+            cursor: pointer;
+            transition: transform 0.4s ease;
         }
-        .artwork-card:hover { transform: translateY(-15px) scale(1.03); }
+        .artwork-inner {
+            /* ギャラリー画像も個別にふわふわさせる */
+            animation: floatingActionSimple 5s ease-in-out infinite;
+            will-change: transform;
+            transition: all 0.4s ease;
+        }
+        @keyframes floatingActionSimple {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        .artwork-card:nth-child(2n) .artwork-inner { animation-delay: 1s; }
+        .artwork-card:nth-child(3n) .artwork-inner { animation-delay: 2s; }
 
-        .image-wrapper {
-            position: relative;
-            overflow: hidden;
-            border-radius: 2rem;
+        .artwork-card:hover {
+            transform: scale(1.05) translateY(-8px);
+        }
+        .artwork-card:hover .artwork-inner {
+            animation-play-state: paused;
             background: white;
-            z-index: 1;
+            box-shadow: 15px 15px 30px var(--shadow-dark);
         }
-        .image-wrapper::after {
-            content: '';
-            position: absolute;
-            top: -100%; left: -100%; width: 50%; height: 300%;
-            background: linear-gradient(to right, transparent, rgba(255,255,255,0.8), transparent);
-            transform: rotate(45deg);
+        .artwork-card img {
+            transition: transform 0.6s ease;
         }
-        .artwork-card:hover .image-wrapper::after { animation: shine 1.2s forwards; }
-        @keyframes shine { to { top: 100%; left: 100%; } }
+        .artwork-card:hover img {
+            transform: scale(1.08);
+        }
 
-        .carousel-container {
-            display: flex;
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
-            padding: 40px 10px;
-            scrollbar-width: none;
-        }
-        .carousel-container::-webkit-scrollbar { display: none; }
-        
-        .reveal { opacity: 0; transform: translateY(30px); transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1); }
+        .reveal { opacity: 0; transform: translateY(20px); transition: 0.8s ease-out; }
         .reveal.active { opacity: 1; transform: translateY(0); }
+
+        .section-label {
+            display: inline-block;
+            background: white;
+            padding: 4px 20px;
+            border-radius: 99px;
+            font-size: 10px;
+            font-weight: 900;
+            letter-spacing: 0.1em;
+            color: var(--accent-candy);
+            box-shadow: 4px 4px 8px var(--shadow-dark);
+            margin-bottom: 1rem;
+        }
+
+        /* ハートトレイル */
+        .trail-heart {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            width: 15px; height: 15px;
+            background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff8fa3'><path d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/></svg>") no-repeat;
+            opacity: 0.8;
+            display: none;
+        }
+        @media (min-width: 1024px) { .trail-heart { display: block; } }
 
         .sparkle-mouse {
             position: absolute;
             pointer-events: none;
             width: 14px; height: 14px;
-            background: var(--glitter-gold);
+            background: #fff5a3;
             clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-            filter: drop-shadow(0 0 5px white);
             z-index: 9999;
+        }
+
+        #lightbox {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
         }
     </style>
 </head>
@@ -182,206 +233,254 @@
 
     <div class="bg-pattern"></div>
     <div class="bg-dots"></div>
-    <div class="prism-layer"></div>
     <div id="bubble-container"></div>
 
-    <main class="max-w-4xl mx-auto px-5 py-12">
+    <main class="max-w-4xl mx-auto px-6 py-12 relative z-10">
         
-        <!-- Profile -->
-        <section class="text-center mb-20 reveal">
-            <div class="relative inline-block mb-10 group">
-                <div class="w-44 h-44 md:w-64 md:h-64 rounded-full neu-flat neon-border p-3 mx-auto transition-transform duration-700 group-hover:scale-105">
-                    <div class="w-full h-full rounded-full overflow-hidden border-4 border-white bg-white shadow-inner">
-                        <img src="https://raw.githubusercontent.com/kira00kira/my-links/main/assets/kira.webp" alt="Kira" class="w-full h-full object-cover">
+        <!-- Profile Section -->
+        <section class="text-center mb-16 reveal">
+            <div class="profile-container">
+                <div class="floating-shadow"></div>
+                <!-- 浮遊するボックス自体を中央からアニメーションさせる -->
+                <div class="floating-icon-box">
+                    <div class="w-full h-full rounded-full neu-flat p-2.5 relative">
+                        <div class="w-full h-full rounded-full overflow-hidden border-4 border-white bg-white">
+                            <img src="https://raw.githubusercontent.com/kira00kira/my-links/main/assets/kira.webp" alt="Kira" class="w-full h-full object-cover">
+                        </div>
+                        <div class="absolute -bottom-1 -right-1 bg-white w-14 h-14 rounded-full flex items-center justify-center text-3xl shadow-xl z-20 border-2 border-pink-50">🎀</div>
                     </div>
                 </div>
-                <div class="absolute -bottom-2 -right-2 bg-white w-14 h-14 rounded-full flex items-center justify-center text-3xl shadow-xl animate-bounce border-2 border-pink-50">🎀</div>
             </div>
             
-            <h1 class="text-4xl md:text-6xl font-black mb-4">
-                <span class="font-handwriting text-pink-300 block text-3xl md:text-4xl mb-1 tracking-widest">Hello I'm</span>
-                きら
-            </h1>
-            <p class="text-sm md:text-base font-bold opacity-60 mb-10 bg-white/50 inline-block px-10 py-3 rounded-full backdrop-blur-md border border-white shadow-sm">
-                ふわっと甘く優しい可愛い世界を♡
-            </p>
+            <div class="mt-4">
+                <h1 class="text-4xl md:text-6xl font-black mb-4">
+                    <span class="font-handwriting text-pink-300 block text-3xl md:text-4xl mb-1">Hello I'm</span>
+                    きら
+                </h1>
+                <p class="text-[12px] md:text-base font-bold opacity-60 mb-10 bg-white/40 inline-block px-8 py-3 rounded-full border border-white">
+                    ふわっと甘く優しい可愛い世界を♡
+                </p>
 
-            <div class="flex flex-col items-center gap-6">
-                <a href="https://line.me/ti/g2/y_msnyMMnknGKodQ8xK1MJ2_sYletxfvoxud3Q" target="_blank" class="neu-button px-8 py-5 text-[13px] md:text-sm font-black w-full max-w-[360px] shadow-lg flex items-center justify-center whitespace-nowrap bg-gradient-to-r from-white/20 to-transparent">
-                    きらのオープンチャットに参加する🧸
-                </a>
-                <div class="flex gap-5">
-                    <a href="#gallery" class="neu-button px-10 py-3 text-[11px] font-black tracking-widest uppercase">Collection</a>
-                    <a href="#contact" class="neu-button px-10 py-3 text-[11px] font-black bg-white/80 tracking-widest uppercase">Contact</a>
-                </div>
-            </div>
-        </section>
-
-        <!-- Gallery -->
-        <section id="gallery" class="mb-24">
-            <div class="flex items-center gap-4 mb-8 px-2 reveal">
-                <div class="w-16 h-16 neu-flat rounded-3xl flex items-center justify-center text-2xl animate-pulse">🫧</div>
-                <h2 class="text-xl md:text-2xl font-black italic tracking-tighter uppercase">My Collection</h2>
-            </div>
-
-            <div class="carousel-container reveal">
-                <!-- Artwork Cards -->
-                <div class="artwork-card flex-shrink-0 w-64 md:w-80 mr-8 p-4 neu-flat rounded-[2.8rem]" onclick="openLightbox(this.querySelector('img').src)">
-                    <div class="image-wrapper aspect-square mb-5 shadow-sm">
-                        <img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&q=80&w=600" class="w-full h-full object-cover" alt="Art">
-                    </div>
-                    <div class="px-2 flex justify-between items-center">
-                        <span class="font-black text-xs opacity-70 uppercase tracking-tighter">Cotton Candy</span>
-                        <span class="font-handwriting text-pink-300 text-3xl">#01</span>
-                    </div>
-                </div>
-                <div class="artwork-card flex-shrink-0 w-64 md:w-80 mr-8 p-4 neu-flat rounded-[2.8rem]" onclick="openLightbox(this.querySelector('img').src)">
-                    <div class="image-wrapper aspect-square mb-5 shadow-sm">
-                        <img src="https://images.unsplash.com/photo-1525909002-1b05e0c869d8?auto=format&fit=crop&q=80&w=600" class="w-full h-full object-cover" alt="Art">
-                    </div>
-                    <div class="px-2 flex justify-between items-center">
-                        <span class="font-black text-xs opacity-70 uppercase tracking-tighter">Strawberry Dream</span>
-                        <span class="font-handwriting text-pink-300 text-3xl">#02</span>
-                    </div>
-                </div>
-                <div class="artwork-card flex-shrink-0 w-64 md:w-80 mr-8 p-4 neu-flat rounded-[2.8rem]" onclick="openLightbox(this.querySelector('img').src)">
-                    <div class="image-wrapper aspect-square mb-5 shadow-sm">
-                        <img src="https://images.unsplash.com/photo-1558470598-a5dda9640f68?auto=format&fit=crop&q=80&w=600" class="w-full h-full object-cover" alt="Art">
-                    </div>
-                    <div class="px-2 flex justify-between items-center">
-                        <span class="font-black text-xs opacity-70 uppercase tracking-tighter">Minty Clouds</span>
-                        <span class="font-handwriting text-pink-300 text-3xl">#03</span>
-                    </div>
-                </div>
-                <div class="artwork-card flex-shrink-0 w-64 md:w-80 mr-8 p-4 neu-flat rounded-[2.8rem]" onclick="openLightbox(this.querySelector('img').src)">
-                    <div class="image-wrapper aspect-square mb-5 shadow-sm">
-                        <img src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&q=80&w=600" class="w-full h-full object-cover" alt="Art">
-                    </div>
-                    <div class="px-2 flex justify-between items-center">
-                        <span class="font-black text-xs opacity-70 uppercase tracking-tighter">Lemonade Wish</span>
-                        <span class="font-handwriting text-pink-300 text-3xl">#04</span>
+                <div class="flex flex-col items-center gap-5">
+                    <a href="https://line.me/ti/g2/y_msnyMMnknGKodQ8xK1MJ2_sYletxfvoxud3Q" target="_blank" class="neu-button px-8 py-5 text-[13px] md:text-sm font-black w-full max-w-[340px]">
+                        きらのオープンチャットに参加する🧸
+                    </a>
+                    <div class="flex gap-4">
+                        <a href="#gallery" class="neu-button px-8 py-3 text-[11px] font-black uppercase tracking-widest">Collection</a>
+                        <a href="#contact" class="neu-button px-8 py-3 text-[11px] font-black bg-white/70 uppercase tracking-widest">Contact</a>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- About (再構築された枠線デザイン) -->
+        <!-- Gallery Section -->
+        <section id="gallery" class="mb-24 reveal">
+            <div class="text-center mb-4">
+                <span class="section-label">GALLERY</span>
+            </div>
+            <div class="flex overflow-x-auto gap-5 pb-10 px-4 snap-x no-scrollbar" style="scrollbar-width: none; -ms-overflow-style: none;">
+                <!-- 4枚の画像 -->
+                <div class="artwork-card" onclick="openLightbox('https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&q=80&w=600')">
+                    <div class="artwork-inner p-4 neu-flat rounded-[2.8rem]">
+                        <div class="relative overflow-hidden rounded-[2rem] aspect-square mb-4 bg-white">
+                            <img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&q=80&w=600" class="w-full h-full object-cover" alt="Art">
+                        </div>
+                        <div class="px-2 flex justify-between items-center">
+                            <span class="font-black text-[10px] opacity-60 uppercase">Dreamy</span>
+                            <span class="font-handwriting text-pink-300 text-3xl">#01</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="artwork-card" onclick="openLightbox('https://images.unsplash.com/photo-1525909002-1b05e0c869d8?auto=format&fit=crop&q=80&w=600')">
+                    <div class="artwork-inner p-4 neu-flat rounded-[2.8rem]">
+                        <div class="relative overflow-hidden rounded-[2rem] aspect-square mb-4 bg-white">
+                            <img src="https://images.unsplash.com/photo-1525909002-1b05e0c869d8?auto=format&fit=crop&q=80&w=600" class="w-full h-full object-cover" alt="Art">
+                        </div>
+                        <div class="px-2 flex justify-between items-center">
+                            <span class="font-black text-[10px] opacity-60 uppercase">Sweet</span>
+                            <span class="font-handwriting text-pink-300 text-3xl">#02</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="artwork-card" onclick="openLightbox('https://images.unsplash.com/photo-1558470598-a5dda9640f68?auto=format&fit=crop&q=80&w=600')">
+                    <div class="artwork-inner p-4 neu-flat rounded-[2.8rem]">
+                        <div class="relative overflow-hidden rounded-[2rem] aspect-square mb-4 bg-white">
+                            <img src="https://images.unsplash.com/photo-1558470598-a5dda9640f68?auto=format&fit=crop&q=80&w=600" class="w-full h-full object-cover" alt="Art">
+                        </div>
+                        <div class="px-2 flex justify-between items-center">
+                            <span class="font-black text-[10px] opacity-60 uppercase">Pastel</span>
+                            <span class="font-handwriting text-pink-300 text-3xl">#03</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="artwork-card" onclick="openLightbox('https://images.unsplash.com/photo-1515405299443-673bbec58f4a?auto=format&fit=crop&q=80&w=600')">
+                    <div class="artwork-inner p-4 neu-flat rounded-[2.8rem]">
+                        <div class="relative overflow-hidden rounded-[2rem] aspect-square mb-4 bg-white">
+                            <img src="https://images.unsplash.com/photo-1515405299443-673bbec58f4a?auto=format&fit=crop&q=80&w=600" class="w-full h-full object-cover" alt="Art">
+                        </div>
+                        <div class="px-2 flex justify-between items-center">
+                            <span class="font-black text-[10px] opacity-60 uppercase">Sky</span>
+                            <span class="font-handwriting text-pink-300 text-3xl">#04</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
         <section class="reveal mb-28 mx-1">
+            <div class="text-center mb-4">
+                <span class="section-label">ABOUT ME</span>
+            </div>
             <div class="about-frame">
-                <div class="about-inner text-center relative overflow-hidden">
-                    <div class="absolute top-4 left-6 text-xl opacity-20">✨</div>
-                    <div class="absolute bottom-4 right-6 text-xl opacity-20">🫧</div>
-                    
+                <div class="about-inner text-center relative overflow-hidden bg-white/20">
                     <div class="max-w-xl mx-auto relative z-10">
-                        <div class="font-handwriting text-6xl text-pink-300 mb-6 filter drop-shadow-sm">My World</div>
-                        <h3 class="text-2xl md:text-4xl font-black mb-8 leading-tight tracking-tight">甘さの中に、<br>少しの大人っぽさを。</h3>
-                        <div class="w-24 h-1.5 bg-gradient-to-r from-cyan-100 via-pink-300 to-cyan-100 mx-auto mb-10 rounded-full shadow-sm"></div>
-                        <p class="text-[14px] md:text-lg leading-loose opacity-80 font-bold text-left md:text-center px-4">
-                            女の子のファッションや、その場の空気感を大切に。
-                            可愛いだけでは終わらない、物語を感じる世界観。
-                            AIならではの幻想的な色彩で、あなたの心に届く1枚を。
-                        </p>
+                        <div class="font-handwriting text-6xl text-pink-300 mb-6">My World</div>
+                        <h3 class="text-2xl md:text-3xl font-black mb-8 leading-relaxed text-pink-400">甘さの中に、<br>少しの大人っぽさを。</h3>
+                        <div class="w-16 h-1.5 bg-gradient-to-r from-cyan-100 via-pink-300 to-cyan-100 mx-auto mb-10 rounded-full"></div>
+                        <div class="text-[14px] md:text-[16px] leading-[2.2] opacity-80 font-bold text-left md:text-center px-2 space-y-6">
+                            <p>女の子を中心に、ファッションや空気感を大切にしたイラストを制作しています。</p>
+                            <p>男の子やカップルイラストも描きながら、可愛いだけでは終わらない世界観を目指しています。</p>
+                            <p>AIならではの質感やカラーを活かして、やわらかく印象に残る表現を日々模索中です。</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Shop CTA -->
-        <section class="reveal mb-28 px-1">
-            <a href="https://kira00art.base.shop" target="_blank" class="block neu-flat p-2 rounded-[3.5rem] group overflow-hidden hover:rotate-1 transition-transform duration-500">
+        <!-- Shop Section -->
+        <section id="shop" class="reveal mb-28 px-1">
+            <div class="text-center mb-4">
+                <span class="section-label">ORDER SHOP</span>
+            </div>
+            <a href="https://kira00art.base.shop" target="_blank" class="block neu-flat p-2 rounded-[3.5rem] artwork-inner">
                 <div class="p-10 md:p-16 text-center border-4 border-dashed border-white/60 rounded-[3.3rem] bg-white/10 relative">
-                    <span class="font-handwriting text-4xl text-pink-300 block mb-4">Make Your Own!</span>
-                    <h3 class="text-2xl md:text-4xl font-black mb-10 leading-relaxed tracking-tight">
-                        オーダーメイド制作、<br>
-                        1点ものアイコンは<br>
-                        こちら⸜🌷︎⸝‍
-                    </h3>
-                    <div class="neu-button px-16 py-5 bg-white text-pink-400 font-black text-lg md:text-xl shadow-xl inline-block border-2 border-pink-100">
-                        ショップを見に行く🫧
-                    </div>
+                    <span class="font-handwriting text-4xl text-pink-300 block mb-4">For You</span>
+                    <h3 class="text-2xl md:text-3xl font-black mb-10 leading-relaxed">オーダーメイド制作、<br>1点ものアイコンはこちら⸜🌷︎⸝‍</h3>
+                    <div class="neu-button px-14 py-5 bg-white text-pink-400 font-black text-lg border border-pink-100 shadow-xl">ショップを見に行く🫧</div>
                 </div>
             </a>
         </section>
 
-        <!-- SNS Grid -->
+        <!-- Contact Section -->
         <section id="contact" class="mb-20 text-center reveal">
-            <div class="inline-block neu-flat px-12 py-3 mb-14 rounded-full font-black text-xs tracking-[0.2em] bg-white/80 border border-white">
-                FOLLOW ME ✨
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-2xl mx-auto px-4">
-                <a href="https://www.instagram.com/kira_00kira" target="_blank" class="neu-button p-10 flex flex-col items-center gap-5 group">
-                    <span class="text-5xl group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500">✨</span>
-                    <span class="font-black text-xs tracking-widest uppercase">Instagram</span>
+            <div class="inline-block neu-flat px-10 py-3 mb-14 rounded-full font-black text-[10px] tracking-[0.2em] bg-white/80 border border-white">FOLLOW ME ✨</div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-2xl mx-auto px-4">
+                <a href="https://www.instagram.com/kira_00kira" target="_blank" class="neu-button p-8 flex flex-col items-center gap-4 group">
+                    <span class="text-4xl">📸</span>
+                    <span class="font-black text-[10px] tracking-widest uppercase">Instagram</span>
                 </a>
-                <a href="https://www.threads.com/@kira_00kira" target="_blank" class="neu-button p-10 flex flex-col items-center gap-5 group">
-                    <span class="text-5xl group-hover:scale-110 group-hover:-rotate-6 transition-transform duration-500">🍭</span>
-                    <span class="font-black text-xs tracking-widest uppercase">Threads</span>
+                <a href="https://www.threads.com/@kira_00kira" target="_blank" class="neu-button p-8 flex flex-col items-center gap-4 group">
+                    <span class="text-4xl">🍭</span>
+                    <span class="font-black text-[10px] tracking-widest uppercase">Threads</span>
                 </a>
-                <a href="https://note.com/kirakira_000/n/na9fe93d9103b" target="_blank" class="neu-button p-10 flex flex-col items-center gap-5 group">
-                    <span class="text-5xl group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500">🎀</span>
-                    <span class="font-black text-xs tracking-widest uppercase">Portfolio</span>
+                <a href="https://note.com/kirakira_000/n/na9fe93d9103b" target="_blank" class="neu-button p-8 flex flex-col items-center gap-4 group">
+                    <span class="text-4xl">🎀</span>
+                    <span class="font-black text-[10px] tracking-widest uppercase">Portfolio</span>
                 </a>
             </div>
         </section>
 
     </main>
 
-    <footer class="py-20 text-center opacity-30 text-[9px] tracking-[0.6em] font-black">
-        &copy; KIRA DREAMY PASTEL WORLD
-    </footer>
+    <footer class="py-20 text-center opacity-30 text-[9px] tracking-[0.5em] font-black">&copy; KIRA DREAMY PASTEL WORLD</footer>
 
-    <!-- Lightbox -->
-    <div id="lightbox" class="fixed inset-0 bg-white/95 backdrop-blur-2xl z-[100] hidden items-center justify-center p-6" onclick="this.style.display='none'">
-        <div class="neu-flat p-4 max-w-full md:max-w-[700px] relative border-8 border-white">
-            <img id="lightbox-img" src="" class="rounded-[2rem] w-full shadow-2xl">
+    <div id="lightbox" onclick="this.style.display='none'">
+        <div class="neu-flat p-2 max-w-full md:max-w-[500px]">
+            <img id="lightbox-img" src="" class="rounded-[2.5rem] w-full">
         </div>
     </div>
 
     <script>
+        // ハートトレイル
+        const trails = [];
+        const trailCount = 8;
+        for (let i = 0; i < trailCount; i++) {
+            const t = document.createElement('div');
+            t.className = 'trail-heart';
+            document.body.appendChild(t);
+            trails.push({ el: t, x: 0, y: 0 });
+        }
+
+        let mouseX = 0, mouseY = 0;
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            if (Math.random() > 0.8) createSparkle(e.pageX, e.pageY);
+        });
+
+        function animateTrails() {
+            let x = mouseX;
+            let y = mouseY;
+            trails.forEach((t, i) => {
+                t.x += (x - t.x) * 0.15;
+                t.y += (y - t.y) * 0.15;
+                t.el.style.transform = `translate(${t.x}px, ${t.y}px) scale(${1 - i / trailCount})`;
+                t.el.style.opacity = (1 - i / trailCount) * 0.6;
+                x = t.x;
+                y = t.y;
+            });
+            requestAnimationFrame(animateTrails);
+        }
+        animateTrails();
+
+        // シャボン玉
         function initBubbles() {
             const container = document.getElementById('bubble-container');
             setInterval(() => {
                 const b = document.createElement('div');
-                const size = Math.random() * 70 + 20 + 'px';
+                const size = Math.random() * 60 + 20 + 'px';
                 b.className = 'bubble';
-                b.style.width = size; b.style.height = size;
+                b.style.position = 'fixed';
+                b.style.bottom = '-100px';
+                b.style.borderRadius = '50%';
+                b.style.background = 'rgba(255, 255, 255, 0.3)';
+                b.style.border = '1px solid rgba(255, 255, 255, 0.5)';
+                b.style.width = b.style.height = size;
                 b.style.left = Math.random() * 100 + 'vw';
-                b.style.animationDuration = (Math.random() * 8 + 12) + 's';
+                b.style.zIndex = '-1';
+                b.style.pointerEvents = 'none';
                 container.appendChild(b);
+                b.animate([
+                    { transform: 'translateY(0) translateX(0)', opacity: 0.5 },
+                    { transform: `translateY(-110vh) translateX(${Math.random() * 100 - 50}px)`, opacity: 0 }
+                ], { duration: Math.random() * 10000 + 10000, easing: 'linear' });
                 setTimeout(() => b.remove(), 20000);
-            }, 2200);
+            }, 4000);
         }
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) entry.target.classList.add('active');
-            });
-        }, { threshold: 0.1 });
-        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        // キラキラ
+        function createSparkle(x, y, isBurst = false) {
+            const s = document.createElement('div');
+            s.className = 'sparkle-mouse';
+            s.style.left = x + 'px'; s.style.top = y + 'px';
+            document.body.appendChild(s);
+            const angle = Math.random() * Math.PI * 2;
+            const dist = isBurst ? Math.random() * 100 + 40 : Math.random() * 40 + 10;
+            const duration = isBurst ? 1200 : 800;
+            s.animate([
+                { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+                { transform: `translate(${Math.cos(angle)*dist}px, ${Math.sin(angle)*dist}px) scale(0)`, opacity: 0 }
+            ], { duration: duration, easing: 'ease-out' });
+            setTimeout(() => s.remove(), duration);
+        }
 
         document.addEventListener('mousedown', (e) => {
-            for(let i=0; i<10; i++) {
-                const s = document.createElement('div');
-                s.className = 'sparkle-mouse';
-                s.style.left = e.pageX + 'px';
-                s.style.top = e.pageY + 'px';
-                document.body.appendChild(s);
-                const angle = Math.random() * Math.PI * 2;
-                const dist = Math.random() * 120 + 30;
-                s.animate([
-                    { transform: 'translate(0, 0) scale(1)', opacity: 1 },
-                    { transform: `translate(${Math.cos(angle)*dist}px, ${Math.sin(angle)*dist}px) scale(0)`, opacity: 0 }
-                ], { duration: 1000, easing: 'cubic-bezier(0.1, 0.5, 0.5, 1)' });
-                setTimeout(() => s.remove(), 1000);
-            }
+            for(let i=0; i<10; i++) createSparkle(e.pageX, e.pageY, true);
         });
+
+        // スクロールアニメ
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
         function openLightbox(src) {
             document.getElementById('lightbox-img').src = src;
             document.getElementById('lightbox').style.display = 'flex';
         }
 
-        initBubbles();
+        window.onload = () => initBubbles();
     </script>
 </body>
 </html>
